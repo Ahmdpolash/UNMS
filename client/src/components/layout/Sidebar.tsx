@@ -5,6 +5,9 @@ import { facultyPaths } from "../../routes/faculty.routes";
 import { studentPaths } from "../../routes/student.routes";
 import { Link } from "react-router-dom";
 
+import { useAppSelector } from "../../redux/hook";
+import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+
 const { Sider } = Layout;
 
 const userRole = {
@@ -14,10 +17,11 @@ const userRole = {
 };
 
 const Sidebar = () => {
-  const role = "faculty";
+  const user = useAppSelector(selectCurrentUser);
+
   let sidebarItems;
 
-  switch (role) {
+  switch (user!.role) {
     case userRole.ADMIN:
       sidebarItems = SidebarItemGenerator(adminPaths, userRole.ADMIN);
       break;
@@ -43,7 +47,7 @@ const Sidebar = () => {
           alignItems: "center",
         }}
       >
-        <Link to={`/${role}/dashboard`}>
+        <Link to={`/${user!.role}/dashboard`}>
           <h1>UNMS</h1>
         </Link>
       </div>
@@ -58,4 +62,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
