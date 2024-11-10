@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import AppError from "../errors/AppError";
 import httpStatus from "http-status";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import config from "../config";
 import { TUserRole } from "../modules/user/user.interface";
 import { User } from "../modules/user/user.model";
@@ -19,7 +19,12 @@ const auth = (...requiredRoles: TUserRole[]) => {
     }
 
     //check if the token is valid
-    const decoded = verifyToken(token, config.jwt_access_secret as string);
+    let decoded;
+    try {
+      decoded = verifyToken(token, config.jwt_access_secret as string) as any;
+    } catch (error) {
+      throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access");
+    }
 
     const { role, userId, iat } = decoded;
 
