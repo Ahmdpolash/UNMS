@@ -21,7 +21,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     //check if the token is valid
     let decoded;
     try {
-      decoded = verifyToken(token, config.jwt_access_secret as string) as any;
+      decoded = verifyToken(token, config.jwt_access_secret as string) ;
     } catch (error) {
       throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access");
     }
