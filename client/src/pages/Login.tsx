@@ -19,13 +19,16 @@ const Login = () => {
   //   },
   // });
 
+  const defaultValues = {
+    id: "A-0001",
+    password: "admin",
+  };
+
   const dispatch = useAppDispatch();
 
   const [login] = useLoginMutation();
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
-
     const toastId = toast.loading("Logging in...");
     try {
       const userInfo = {
@@ -47,13 +50,13 @@ const Login = () => {
 
       navigate(`/${user.role}/dashboard`);
     } catch (error) {
-      toast.error("something went wrong", { id: toastId, duration: 2000 });
+      toast.error("wrong credientials", { id: toastId, duration: 2000 });
     }
   };
 
   return (
     <Row justify="center" align="middle" style={{ height: "100vh" }}>
-      <PHForm onSubmit={onSubmit}>
+      <PHForm onSubmit={onSubmit} defaultValues={defaultValues}>
         <PHInput type="text" name="id" label={"ID:"} />
 
         <PHInput type="text" name="password" label={"Password:"} />
