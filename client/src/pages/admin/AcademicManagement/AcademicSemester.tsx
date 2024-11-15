@@ -1,12 +1,79 @@
 import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicManagement.api";
 
-const AcademicSemester = () => {
-  const { data } = useGetAllSemesterQuery(undefined);
+import { Table } from "antd";
+import type { TableColumnsType, TableProps } from "antd";
 
-  console.log(data);
+interface DataType {
+  key: React.Key;
+  name: string;
+  age: number;
+  address: string;
+}
+
+const AcademicSemester = () => {
+  const { data: semesterData } = useGetAllSemesterQuery(undefined);
+
+  const tableData = semesterData?.data?.map(
+    ({ _id, name, startMonth, endMonth, year }) => ({
+      key: _id,
+      name,
+      startMonth,
+      endMonth,
+      year,
+    })
+  );
+
+  const columns: TableColumnsType<DataType> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      showSorterTooltip: { target: "full-header" },
+      filters: [
+        {
+          text: "Autumn",
+          value: "Autumn",
+        },
+        {
+          text: "Fall",
+          value: "Fall",
+        },
+        {
+          text: "Summer",
+          value: "Summer",
+        },
+      ],
+    },
+    {
+      title: "Year",
+      dataIndex: "year",
+    },
+    {
+      title: "Start Month",
+      dataIndex: "startMonth",
+    },
+    {
+      title: "End Month",
+      dataIndex: "endMonth",
+    },
+  ];
+
+  const onChange: TableProps<DataType>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+
   return (
     <div>
-      <h1>hi{data?.data.length}</h1>
+      <Table<DataType>
+        columns={columns}
+        dataSource={tableData}
+        onChange={onChange}
+        showSorterTooltip={{ target: "sorter-icon" }}
+      />
     </div>
   );
 };
