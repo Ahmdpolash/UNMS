@@ -2,16 +2,17 @@ import { useGetAllSemesterQuery } from "../../../redux/features/admin/academicMa
 
 import { Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
+import { TAcademicSemester } from "../../../types/academicManagement.type";
+import { useState } from "react";
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
+export type TTableData = Pick<
+  TAcademicSemester,
+  "name" | "year" | "startMonth" | "endMonth"
+>;
 
 const AcademicSemester = () => {
-  const { data: semesterData } = useGetAllSemesterQuery(undefined);
+  const [params, setParams] = useState([]);
+  const { data: semesterData } = useGetAllSemesterQuery(params);
 
   const tableData = semesterData?.data?.map(
     ({ _id, name, startMonth, endMonth, year }) => ({
@@ -23,7 +24,7 @@ const AcademicSemester = () => {
     })
   );
 
-  const columns: TableColumnsType<DataType> = [
+  const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -46,6 +47,20 @@ const AcademicSemester = () => {
     {
       title: "Year",
       dataIndex: "year",
+      filters: [
+        {
+          text: "2024",
+          value: "2024",
+        },
+        {
+          text: "2025",
+          value: "2025",
+        },
+        {
+          text: "2026",
+          value: "2026",
+        },
+      ],
     },
     {
       title: "Start Month",
@@ -57,18 +72,29 @@ const AcademicSemester = () => {
     },
   ];
 
-  const onChange: TableProps<DataType>["onChange"] = (
+  const onChange: TableProps<TTableData>["onChange"] = (
     pagination,
     filters,
     sorter,
     extra
   ) => {
-    console.log("params", pagination, filters, sorter, extra);
+    if (extra.action === "filter") {
+      const queryParams = [];
+
+      filters.name?.forEach((item) =>
+        queryParams.push({ name: "name", value: item })
+      );
+      filters.year?.forEach((item) =>
+        queryParams.push({ name: "year", value: item })
+      );
+
+      setParams(queryParams);
+    }
   };
 
   return (
     <div>
-      <Table<DataType>
+      <Table<TTableData>
         columns={columns}
         dataSource={tableData}
         onChange={onChange}
