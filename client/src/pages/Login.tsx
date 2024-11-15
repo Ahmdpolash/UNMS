@@ -50,7 +50,7 @@ const Login = () => {
 
       navigate(`/${user.role}/dashboard`);
     } catch (error) {
-      toast.error("wrong credientials", { id: toastId, duration: 2000 });
+      toast.error("something went wrong", { id: toastId, duration: 2000 });
     }
   };
 
