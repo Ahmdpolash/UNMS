@@ -9,7 +9,7 @@ import {
 import { RootState } from "../store";
 import { logOut, setUser } from "../features/auth/authSlice";
 import { toast } from "sonner";
-import { TResponse } from "../../types/global";
+import { TResponse } from "../../types/global.type";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/v1",
